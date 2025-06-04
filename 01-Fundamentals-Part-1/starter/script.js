@@ -1,29 +1,29 @@
-// let msg = "amazing";
+// // let msg = "amazing";
 
-// if(msg=== 'amazing')alert("you are awesome");
-
-
-// console.log(10 + 20 - 30 + 40);
+// // if(msg=== 'amazing')alert("you are awesome");
 
 
-// //varaible
-
-// let name  = "Hit";
-// console.log(name);
-
-// let age = 24;
-// console.log(age);
+// // console.log(10 + 20 - 30 + 40);
 
 
-// falsy values
+// // //varaible
 
-// 0,'',null,NaN,undefined
+// // let name  = "Hit";
+// // console.log(name);
+
+// // let age = 24;
+// // console.log(age);
 
 
-let height=100;
+// // falsy values
 
-if(height){
-    console.log("There is some value atleast");
-}else{
-    console.log("No, it's not defined!")
-}
+// // 0,'',null,NaN,undefined
+
+
+// let height=100;
+
+// if(height){
+//     console.log("There is some value atleast");
+// }else{
+//     console.log("No, it's not defined!")
+// }
