@@ -62,10 +62,9 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 //movements of transaction
-const updateMovements = (movementsArary) => {
+const updateMovements = movementsArary => {
   containerMovements.innerHTML = '';
   movementsArary.forEach((val, idx) => {
-    console.log(movementsArary,"array inside function");
     let type = val >= 0 ? 'deposit' : 'withdrawal';
 
     let movementEle = `
@@ -89,8 +88,7 @@ const calculateBalance = arr => {
 
 //calculate income summary
 
-const calculateSummary = (arr,it) => {
-  
+const calculateSummary = (arr, it) => {
   const incoming = arr
     .filter(income => {
       return income > 0;
@@ -98,8 +96,6 @@ const calculateSummary = (arr,it) => {
     .reduce((acc, val) => {
       return acc + val;
     }, 0);
-
-  
 
   labelSumIn.textContent = incoming;
 
@@ -118,7 +114,7 @@ const calculateSummary = (arr,it) => {
       return val > 0;
     })
     .map(i => {
-      return (i * it ) / 100;
+      return (i * it) / 100;
     })
     .filter(iin => {
       return iin >= 1;
@@ -134,55 +130,69 @@ let currentLoggedInUser;
 btnLogin.addEventListener('click', e => {
   e.preventDefault();
 
-  accounts.find(account => {
-    if (
-      account.username === inputLoginUsername.value &&
-      account.pin === Number(inputLoginPin?.value)
-    ) {
-      currentLoggedInUser = account.username;
-      inputLoginUsername.value = '';
-      inputLoginPin.value = '';
-      labelWelcome.textContent = `Welcome,${account.owner.split(' ')[0]}`;
-      containerApp.style.opacity = 100;
+  currentLoggedInUser = accounts.find(
+    account => account.username === inputLoginUsername.value
+  );
+  if (currentLoggedInUser?.pin == Number(inputLoginPin.value)) {
+    inputLoginUsername.value = '';
+    inputLoginPin.value = '';
+    labelWelcome.textContent = `Welcome,${
+      currentLoggedInUser.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
 
-      updateMovements(account.movements);
+    updateMovements(currentLoggedInUser.movements);
 
-      const totalBalance = calculateBalance(account.movements);
-      labelBalance.textContent = `${totalBalance}€`;
+    const totalBalance = calculateBalance(currentLoggedInUser.movements);
+    labelBalance.textContent = `${totalBalance}€`;
 
-      calculateSummary(account.movements,account.interestRate);
-    }
-  });
+    calculateSummary(
+      currentLoggedInUser.movements,
+      currentLoggedInUser.interestRate
+    );
+  }
+});
 
-  btnTransfer.addEventListener("click",(e)=>{
-    e.preventDefault();
+btnTransfer.addEventListener('click', (e) => {
+  e.preventDefault();
+  const receiverAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+  
+  const totalBalanceOfCurrentUser = calculateBalance(
+    currentLoggedInUser.movements
+  );
 
-    accounts.find((account)=>{
-      if(account.username === inputTransferTo.value){
-        const amount = Number(inputTransferAmount.value);
-        accounts.find((currentUser)=>{
-          if(currentUser.username === currentLoggedInUser){
-            currentUser.movements.push(amount * -1);
-            updateMovements(currentUser.movements);
-            const totalBalance = calculateBalance(currentUser.movements);
-            labelBalance.textContent = `${totalBalance}€`;
+  if (totalBalanceOfCurrentUser >= Number(inputTransferAmount.value)) {
+    currentLoggedInUser.movements.push(-1 * Number(inputTransferAmount.value));
+    updateMovements(currentLoggedInUser.movements);
+
     
-            calculateSummary(currentUser.movements,account.interestRate);
-            console.log(currentUser.movements);
-          }
-        })
-        account.movements.push(amount);
-        updateMovements(account.movements);
-        const totalBalance = calculateBalance(account.movements);
-        labelBalance.textContent = `${totalBalance}€`;
+    labelBalance.textContent = `${totalBalanceOfCurrentUser}€`;
 
-        calculateSummary(account.movements,account.interestRate);
+    calculateSummary(
+      currentLoggedInUser.movements,
+      currentLoggedInUser.interestRate
+    );
 
-
-      }
-    })
     
-  })
+    receiverAcc.movements.push(Number(inputTransferAmount.value));
+
+    updateMovements(receiverAcc.movements);
+
+    const totalBalance = calculateBalance(receiverAcc.movements);
+    labelBalance.textContent = `${totalBalance}€`;
+
+    calculateSummary(receiverAcc.movements, receiverAcc.interestRate);
+
+    
+    inputTransferAmount.value = '';
+    inputTransferTo.value = '';
+  }else{
+    alert("Gareeb Gareeeb");
+  }
+
+  console.log(receiverAcc);
 });
 
 //compute usernames
@@ -199,7 +209,6 @@ const computeUserName = accounts => {
 };
 
 const userNames = computeUserName(accounts);
-console.log(accounts);
 
 //design logging flow
 
