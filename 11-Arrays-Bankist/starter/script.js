@@ -225,6 +225,35 @@ btnLogin.addEventListener('click', e => {
     containerApp.style.opacity = 100;
   }
 });
+
+
+btnClose.addEventListener('click',(e)=>{
+  e.preventDefault();
+  console.log(inputCloseUsername.value,currentLoggedInUser.username);
+  if(inputCloseUsername.value === currentLoggedInUser.username &&
+    Number(inputClosePin.value) === Number(currentLoggedInUser.pin)
+  ){
+    const idx = accounts.findIndex(acc => acc.username === currentLoggedInUser.username);
+
+    accounts.splice(idx,1);
+
+    containerApp.style.opacity = 0;
+  }
+})
+
+// sorting
+
+//console.log(accounts);
+const sortToArr = accounts[0].movements;
+
+sortToArr.sort((a,b) => a-b)
+console.log(sortToArr);
+//Calculate total turn over
+
+const totalTurover = accounts.map(acc => acc.movements).flat(1).reduce((acc,curr) => acc + curr , 0);
+console.log(totalTurover);
+
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -251,3 +280,7 @@ btnLogin.addEventListener('click', e => {
 // console.log(deposits);
 
 /////////////////////////////////////////////////
+
+
+
+
